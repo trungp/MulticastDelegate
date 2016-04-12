@@ -395,6 +395,7 @@
 				5F922E311CB680DA00784E8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5F922E321CB680DA00784E8B /* Build configuration list for PBXNativeTarget "MulticastDelegateTests" */ = {
 			isa = XCConfigurationList;
@@ -403,6 +404,7 @@
 				5F922E341CB680DA00784E8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
