@@ -13,12 +13,14 @@
 
 import Foundation
 
+// Operator to compare two weakNodes
 func ==(lhs: WeakNode, rhs: WeakNode) -> Bool {
     return lhs.callback === rhs.callback
 }
 
 infix operator ~> {}
 
+// Operator to perform closure on delegate
 func ~> <T> (inout left: MulticastDelegate<T>?, right: ((T) -> Void)?) {
     if let left = left, right = right {
         left.performClosure(right)
@@ -26,32 +28,48 @@ func ~> <T> (inout left: MulticastDelegate<T>?, right: ((T) -> Void)?) {
 }
 
 infix operator += {}
+// Operator to add delegate to multicast object
 func += <T> (inout left: MulticastDelegate<T>?, right: T?) {
     if let left = left, right = right {
         left.addCallback(right)
     }
 }
 
+// Operator to remove delegate from multicast object
 func -= <T> (inout left: MulticastDelegate<T>?, right: T?) {
     if let left = left, right = right {
         left.removeCallback(right)
     }
 }
 
-class MulticastDelegate<T>: NSObject {
+// This class provide the way to perform selector or notify to multiple object.
+// Basically, it works like observer pattern, send message to all observer which registered with the multicast object.
+// The multicast object hold the observer inside as weak storage so make sure you are not lose the object without any reason.
+public class MulticastDelegate<T>: NSObject {
     
     private var nodes: [WeakNode]?
     
-    override init() {
+    public override init() {
         super.init()
         nodes = [WeakNode]()
     }
     
-    func numberOfNodes() -> Int {
+    /**
+     Ask to know number of nodes or delegates are in multicast object whhich are ready to perform selector.
+     
+     - Returns Int: Number of delegates in multicast object.
+    */
+    public func numberOfNodes() -> Int {
         return nodes?.count ?? 0
     }
     
-    func addCallback(callback: T?, queue: dispatch_queue_t? = nil) {
+    /**
+     Add callback to perform selector on later.
+     
+     - Parameter callback: The callback to perform selector in the future.
+     - Parameter queue: The queue to perform the callback on. Default is main queue
+    */
+    public func addCallback(callback: T?, queue: dispatch_queue_t? = nil) {
         // Default is main queue
         let queue: dispatch_queue_t = {
             guard let q = queue else { return dispatch_get_main_queue() }
@@ -65,7 +83,7 @@ class MulticastDelegate<T>: NSObject {
         }
     }
     
-    func removeCallback(callback: T?) {
+    public func removeCallback(callback: T?) {
         if let nodes = nodes, let cb1 = callback as? AnyObject {
             self.nodes = nodes.filter { node in
                 
