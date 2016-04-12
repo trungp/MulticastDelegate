@@ -35,6 +35,12 @@ func += <T> (inout left: MulticastDelegate<T>?, right: T?) {
     }
 }
 
+func += <T> (inout left: MulticastDelegate<T>?, right: (T?, dispatch_queue_t?)?) {
+    if let left = left, right = right {
+        left.addCallback(right.0, queue: right.1)
+    }
+}
+
 // Operator to remove delegate from multicast object
 func -= <T> (inout left: MulticastDelegate<T>?, right: T?) {
     if let left = left, right = right {
